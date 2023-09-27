@@ -1,0 +1,144 @@
+---
+title: "Proyecto Gestión Financiera 202320"
+author: "Hernán Venegas"
+format: html
+editor: visual
+---
+
+```{r configuraciones}
+#| message: false
+#| echo: false
+# Esto ya debiera estar cargado en el proyecto en posit.cloud
+# devtools::install_github("business-science/tidyquant")
+# Loads tidyquant, lubridate, xts, quantmod, TTR, and PerformanceAnalytics
+library(tidyverse)
+library(tidyquant)  
+```
+
+## Descripción Activo y Contexto (Hito 1)
+
+**Activo inmobiliario**
+
+Índice S & P del IPSA
+
+PARECE QUE SI
+
+Fecha de entrega: Jueves 28 de Septiembre 23:59.
+
+### Definición
+
+Definir y describir activo a estudiar, acompañar con datos (tributa a indicador de Contexto) y con referencias científicas realizando una investigacion relacionada a articulos ubicados en la base de datos de Web of Science, con una calificacion Q1-Q2 y referenciada varias veces (Esto se verá en el tutorial de la semana 5).
+
+```{r ETL}
+#| echo: false
+# Alternativamente Use FANG data set
+# data("FANG") 
+end <- as_date("2022-12-31")
+# Get AAPL and AMZN Stock Prices
+# AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end)
+# AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end)
+CMPC <- tq_get("CMPC.SN", get = "stock.prices", from = "2000-01-01", to = end)
+VAPORES <- tq_get("VAPORES.SN", get = "stock.prices", from = "2000-01-01", to = end)
+CONCHATORO <- tq_get("CONCHATORO.SN", get = "stock.prices", from = "2000-01-01", to = end)
+CL <- rbind(CMPC,VAPORES,CONCHATORO)
+```
+
+El activo CMPC tiene un valor promedio para el intervalo igual a `r round(mean(CMPC$close),digits=0)`
+
+```{r CMPCline}
+#| echo: false
+CMPC %>%
+    ggplot(aes(x = date, y = close)) +
+    geom_line() +
+    labs(title = "CMPC Line Chart", y = "Closing Price", x = "") + 
+    theme_tq() +
+  geom_hline(yintercept=mean(CMPC$close), linetype="dashed", color = "red")
+```
+
+```{r CMPCcandle}
+#| warning: false
+CMPC %>%
+    ggplot(aes(x = date, y = close)) +
+    geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
+    labs(title = "AAPL Candlestick Chart", y = "Closing Price", x = "") +
+    theme_tq()
+```
+
+### Motivación
+
+Establecer la relevancia o potencial interés específico del activo que justifique el porque realizar la investigacion a este activo y no a otros. Argumentar haciendo referencia a datos o noticias actuales que motiven el estudio de este activo.
+
+### Contexto
+
+Ingesta datos del activo y provee un análisis de estadística descriptiva simple junto con el análisis de una variable económica de contexto. Ejemplo: Si el activo es una minera, la variable puede ser el precio del metal. Acompañar este analisis con graficos, riesgos, horizonte de inversion, rentabilidad del activo, entre otros.
+
+```{r context}
+#| warning: false
+#| echo: false
+start <- end - weeks(6)
+
+CL %>%
+    filter(date >= start - days(2 * 15)) %>%
+    ggplot(aes(x = date, y = close, group = symbol)) +
+    geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
+    geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +
+    labs(title = "CL Candlestick Chart", 
+         subtitle = "Experimenting with Mulitple Stocks",
+         y = "Closing Price", x = "") + 
+    coord_x_date(xlim = c(start, end)) +
+    facet_wrap(~ symbol, ncol = 2, scale = "free_y") +
+    theme_tq()
+```
+
+Ejemplos:
+
+::: columns
+::: {.column width="50%"}
+![](photos/Captura%20de%20pantalla%202023-08-22%20102815.png){fig-align="left" width="261"}
+:::
+
+::: {.column width="50%"}
+![](photos/Captura%20de%20pantalla%202023-08-22%20103005.png){fig-align="right" width="254"}
+:::
+:::
+
+![](photos/Captura%20de%20pantalla%202023-08-22%20103037.png){fig-align="left" width="256"}
+
+### Tareas Semana 4
+
+-   Utilizar otros ejemplos de visualización: https://business-science.github.io/tidyquant/articles/TQ04-charting-with-tidyquant.html
+-   ¿Para que sirven las siguientes líneas en los bloques de código?
+
+```         
+#| warning: false
+#| echo: false
+```
+
+-   Definir activos en base a cada una de las [industrias definidas](https://uandes.instructure.com/courses/28266/pages/proyecto-del-curso): Inmobiliaria, Banca, Energía
+-   Buscar referencias científicas en la literatura para dar contexto al análisis
+
+### Análisis de Largo Plazo
+
+#### Caracterización deuda (Aplicación cap. 15)
+
+Describir el activo especificando en que realiza sus inversiones (por tipo de instrumento). Especificar sus acciones comunes, preferentes y bonos relacionados aplicando lo aprendido en el capitulo respectivo.
+
+Ejemplo de un fondo mutuo como activo a analizar:
+
+![](photos/Captura%20de%20pantalla%202023-08-22%20112340.png){fig-align="center"}
+
+#### Caracterización de emisiones históricas (Aplicación cap. 20)
+
+Describir el proceso de emision de acciones paso a paso del activo seleccionado, caracterizando el tipo de colocacion que utilizaron en contraste con el procedimiento basico realizado en el capitulo respectivo.
+
+![](photos/Captura%20de%20pantalla%202023-08-22%20111527.png){fig-align="center"}
+
+#### Relación con activos derivados
+
+Describe un activo derivado relacionado, mostrando datos de su evolucion. Tambien mencionar porque es importante este derivado para la activo en cuestion.
+
+Aplicar procedimiento de valoración de un derivado por inclusión en estructura de retornos (a profundizar en tutorial de la unidad de Derivados).
+
+### Reporte grupal
+
+Definicion de un balance de portafolio sobre los 3 activos del grupo, donde se especifique los pesos de cada activo de tal forma que maximize el retorno de la cartera.
