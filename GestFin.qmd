@@ -1,6 +1,6 @@
 ---
 title: "Proyecto Gestión Financiera 202320"
-author: "Hernán Venegas"
+author: "Hernán Venegas GRUPO 14"
 format: html
 editor: visual
 ---
@@ -21,7 +21,9 @@ library(tidyquant)
 
 Índice S & P del IPSA
 
-PARECE QUE SI
+PARECE QUE SI ISIDORITA
+
+¿?¿?
 
 Fecha de entrega: Jueves 28 de Septiembre 23:59.
 
@@ -37,34 +39,34 @@ end <- as_date("2022-12-31")
 # Get AAPL and AMZN Stock Prices
 # AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end)
 # AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end)
-CMPC <- tq_get("CMPC.SN", get = "stock.prices", from = "2000-01-01", to = end)
-VAPORES <- tq_get("VAPORES.SN", get = "stock.prices", from = "2000-01-01", to = end)
-CONCHATORO <- tq_get("CONCHATORO.SN", get = "stock.prices", from = "2000-01-01", to = end)
-CL <- rbind(CMPC,VAPORES,CONCHATORO)
+CENCOSHOPP <- tq_get("CENCOSHOPP.SN", get = "stock.prices", from = "2000-01-01", to = end)
+INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end)
+PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end)
+CL <- rbind(CENCOSHOPP,INGEVEC,PARAUCO)
 ```
 
-El activo CMPC tiene un valor promedio para el intervalo igual a `r round(mean(CMPC$close),digits=0)`
+El activo CENCOSHOPP tiene un valor promedio para el intervalo igual a `r round(mean(CENCOSHOPP$close),digits=0)`
 
-```{r CMPCline}
+```{r CENCOSHOPline}
 #| echo: false
-CMPC %>%
+CENCOSHOPP %>%
     ggplot(aes(x = date, y = close)) +
     geom_line() +
-    labs(title = "CMPC Line Chart", y = "Closing Price", x = "") + 
+    labs(title = "CENCOSHOPP Line Chart", y = "Closing Price", x = "") + 
     theme_tq() +
-  geom_hline(yintercept=mean(CMPC$close), linetype="dashed", color = "red")
+  geom_hline(yintercept=mean(CENCOSHOPP$close), linetype="dashed", color = "red")
 ```
 
 ```{r CMPCcandle}
 #| warning: false
-CMPC %>%
+CENCOSHOPP %>%
     ggplot(aes(x = date, y = close)) +
     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
-    labs(title = "AAPL Candlestick Chart", y = "Closing Price", x = "") +
+    labs(title = "CENCOSHOPP Candlestick Chart", y = "Closing Price", x = "") +
     theme_tq()
 ```
 
-### Motivación
+### Motivación (NIGNUNA)
 
 Establecer la relevancia o potencial interés específico del activo que justifique el porque realizar la investigacion a este activo y no a otros. Argumentar haciendo referencia a datos o noticias actuales que motiven el estudio de este activo.
 
