@@ -19,11 +19,7 @@ library(tidyquant)
 
 **Activo inmobiliario**
 
-Índice S & P del IPSA
 
-PARECE QUE SI ISIDORITA
-
-¿?¿?
 
 Fecha de entrega: Jueves 28 de Septiembre 23:59.
 
@@ -67,6 +63,10 @@ CENCOSHOPP %>%
 ```
 
 ### Motivación (NIGNUNA)
+
+
+El sector inmobiliario es fundamental en nuestra economía y nuestra sociedad, impacta directamente en la forma en que vivimos, trabajamos y hacemos nuestras labores diarias. Tiene impacto directo en la calidad y la vida de todas las personas, proporciona los espacios para todo lo que hacemos, desde la vivienda y el trabajo hasta el comercio y la recreación. La forma en que se planifican y se desarrollan esos espacios es muy relevante. Este sector es muy diverso, abarca áreas como la inversión, desarrollo, gestión de propiedades, planificación urbana, arquitectura, construcción, entre otras.
+El mercado inmobiliario es un pilar fundamental en la economía global, comprender como funciona puede ser de gran ayuda para la gestión de activos y toma de decisiones. Es tal la importancia de este sector, que la posible quiebra de la inmobiliaria Evergrande en China, ha tenido como consecuencia un nerviosismo generalizado en los mercados, llevando a la baja incluso el precio del cobre y el litio. Solo por anunciar que no serían capaces de emitir más deuda. 
 
 Establecer la relevancia o potencial interés específico del activo que justifique el porque realizar la investigacion a este activo y no a otros. Argumentar haciendo referencia a datos o noticias actuales que motiven el estudio de este activo.
 
