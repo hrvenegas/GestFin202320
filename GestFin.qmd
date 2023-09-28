@@ -1,6 +1,6 @@
 ---
 title: "Proyecto Gestión Financiera 202320"
-author: "Hernán Venegas GRUPO 14"
+author: "GRUPO 14"
 format: html
 editor: visual
 ---
@@ -18,8 +18,6 @@ library(tidyquant)
 ## Descripción Activo y Contexto (Hito 1)
 
 **Activo inmobiliario**
-
-
 
 Fecha de entrega: Jueves 28 de Septiembre 23:59.
 
@@ -62,15 +60,19 @@ CENCOSHOPP %>%
     theme_tq()
 ```
 
-### Motivación (NIGNUNA)
+### Motivación 
 
-
-El sector inmobiliario es fundamental en nuestra economía y nuestra sociedad, impacta directamente en la forma en que vivimos, trabajamos y hacemos nuestras labores diarias. Tiene impacto directo en la calidad y la vida de todas las personas, proporciona los espacios para todo lo que hacemos, desde la vivienda y el trabajo hasta el comercio y la recreación. La forma en que se planifican y se desarrollan esos espacios es muy relevante. Este sector es muy diverso, abarca áreas como la inversión, desarrollo, gestión de propiedades, planificación urbana, arquitectura, construcción, entre otras.
-El mercado inmobiliario es un pilar fundamental en la economía global, comprender como funciona puede ser de gran ayuda para la gestión de activos y toma de decisiones. Es tal la importancia de este sector, que la posible quiebra de la inmobiliaria Evergrande en China, ha tenido como consecuencia un nerviosismo generalizado en los mercados, llevando a la baja incluso el precio del cobre y el litio. Solo por anunciar que no serían capaces de emitir más deuda. 
+El sector inmobiliario es fundamental en nuestra economía y nuestra sociedad, impacta directamente en la forma en que vivimos, trabajamos y hacemos nuestras labores diarias. Tiene impacto directo en la calidad y la vida de todas las personas, proporciona los espacios para todo lo que hacemos, desde la vivienda y el trabajo hasta el comercio y la recreación. La forma en que se planifican y se desarrollan esos espacios es muy relevante. Este sector es muy diverso, abarca áreas como la inversión, desarrollo, gestión de propiedades, planificación urbana, arquitectura, construcción, entre otras. El mercado inmobiliario es un pilar fundamental en la economía global, comprender como funciona puede ser de gran ayuda para la gestión de activos y toma de decisiones. Es tal la importancia de este sector, que la posible quiebra de la inmobiliaria Evergrande en China, ha tenido como consecuencia un nerviosismo generalizado en los mercados, llevando a la baja incluso el precio del cobre y el litio. Solo por anunciar que no serían capaces de emitir más deuda.
 
 Establecer la relevancia o potencial interés específico del activo que justifique el porque realizar la investigacion a este activo y no a otros. Argumentar haciendo referencia a datos o noticias actuales que motiven el estudio de este activo.
 
 ### Contexto
+
+Se escogió como activo principal la acción 'CENCOSHOPP', las cuales corresponden a la empresa Cencosud Shopping S.A. Es una empresa operadora de centros comerciales en Latino América, con presencia en Chile, Perú y Colombia.
+
+El segundo activo escogido es Parque Arauco, una empresa de rentas inmobiliarias. Son expertos en la operación de activos inmobiliarios multiformato, en su mayoría de uso comercial. Presentes en tres países, Chile, Perú y Colombia. Sus locatarios son principalmente tiendas de mejoramiento del hogar, supermercados, restaurantes, cines, centros de salud y tiendas menores. Son uno de los principales actores de la industria y tienen una base de ingresos estable y bien diversificada, sustentada en una estructura de cobros fijos con vencimientos en el largo plazo.
+
+El tercer activo es Ingevec, empresa líder en Chile en construcción que lleva 40 años en el rubro. Desarrollan, construyen y venden proyectos. También construyen para el sector público y privado a lo largo de todo el país, generalmente en grandes obras comerciales e infraestructura pública.
 
 Ingesta datos del activo y provee un análisis de estadística descriptiva simple junto con el análisis de una variable económica de contexto. Ejemplo: Si el activo es una minera, la variable puede ser el precio del metal. Acompañar este analisis con graficos, riesgos, horizonte de inversion, rentabilidad del activo, entre otros.
 
