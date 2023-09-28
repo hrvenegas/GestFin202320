@@ -72,9 +72,7 @@ Se escogió como activo principal la acción 'CENCOSHOPP', las cuales correspond
 
 El segundo activo escogido es Parque Arauco, una empresa de rentas inmobiliarias. Son expertos en la operación de activos inmobiliarios multiformato, en su mayoría de uso comercial. Presentes en tres países, Chile, Perú y Colombia. Sus locatarios son principalmente tiendas de mejoramiento del hogar, supermercados, restaurantes, cines, centros de salud y tiendas menores. Son uno de los principales actores de la industria y tienen una base de ingresos estable y bien diversificada, sustentada en una estructura de cobros fijos con vencimientos en el largo plazo. Tiene un valor promedio igual a `r round(mean(PARAUCO$close),digits=0)`
 
-El tercer activo es Ingevec, empresa líder en Chile en construcción que lleva 40 años en el rubro. Desarrollan, construyen y venden proyectos. También construyen para el sector público y privado a lo largo de todo el país, generalmente en grandes obras comerciales e infraestructura pública. Tiene un valor promedio igual a `r round(mean(INGEVEC$close),digits=0)`
-
-Ingesta datos del activo y provee un análisis de estadística descriptiva simple junto con el análisis de una variable económica de contexto. Ejemplo: Si el activo es una minera, la variable puede ser el precio del metal. Acompañar este analisis con graficos, riesgos, horizonte de inversion, rentabilidad del activo, entre otros.
+El tercer activo es Ingevec, empresa líder en Chile en construcción que lleva 40 años en el rubro. Desarrollan, construyen y venden proyectos. También construyen para el sector público y privado a lo largo de todo el país, generalmente en grandes obras comerciales e infraestructura pública. Tiene un valor promedio igual a `r round(mean(INGEVEC$close),digits=0)` Se elige este activo como derivado porque ha llevado a cabo la construcción de centros comerciales que luego CENCOSHOPP o PARAUCO operan.
 
 ```{r context}
 #| warning: false
@@ -145,4 +143,4 @@ Aplicar procedimiento de valoración de un derivado por inclusión en estructura
 
 ### Reporte grupal
 
-Definicion de un balance de portafolio sobre los 3 activos del grupo, donde se especifique los pesos de cada activo de tal forma que maximize el retorno de la cartera.
+El balance del portafolio del grupo estará compuesto en un 50% por el activo correspondiente al sector de energía, 30% sector inmobiliario, y 20% al sector banca. Esto lo consideramos óptimo porque Chile es un país que tiene gran potencial en el sector de la energía y podría beneficiarse fuertemente por nuevas fuentes de energía renovable. El peso asignado al sector inmobiliario es porque consideramos que tiene buenas expectativas de crecimiento en el largo plazo. Finalmente, la ponderación que recibe el sector banca es porque no creemos que en Chile haya mucho espacio para el desarrollo de ese sector, varios bancos tienen su matriz en otros países, y el banco con mayor número de cuentas es propiedad del estado. Además, ya tienen capturado aproximadamente a 15 de los 18 millones de chilenos, por lo que el espacio para crecer no es tan grande como para el sector inmobiliari y de energía.
