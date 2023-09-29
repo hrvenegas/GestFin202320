@@ -92,55 +92,331 @@ CL %>%
     theme_tq()
 ```
 
-Ejemplos:
+### Análisis de Largo Plazo
 
-::: columns
-::: {.column width="50%"}
-![](photos/Captura%20de%20pantalla%202023-08-22%20102815.png){fig-align="left" width="261"}
-:::
+#### Caracterización deuda (Aplicación cap. 15)
 
-::: {.column width="50%"}
-![](photos/Captura%20de%20pantalla%202023-08-22%20103005.png){fig-align="right" width="254"}
-:::
-:::
+Cencosud ha emitido bonos en dos oportunidades.
 
-![](photos/Captura%20de%20pantalla%202023-08-22%20103037.png){fig-align="left" width="256"}
+Las fuentes de financiamiento de la Sociedad son fundamentalmente los flujos generados por la operación del negocio, créditos intercompañía obtenidos de su matriz Cencosud S.A., los que al 30 de junio 2019 ascendían a la suma de \$944.457.471.000, y a través de la colocación de los bonos emitidos con cargo a las Líneas de Bonos a 10 y 30 años plazo, inscritas en el Registro de Valores bajo los números 940 y 941, respectivamente. Se hace presente que respecto de la deuda intercompañía de la Sociedad al 30 de junio de 2019, recientemente ésta fue parcialmente pagada con los fondos obtenidos del aumento de capital materializado a través de la apertura en bolsa de la Compañía efectuada en el mes de julio de 2019. Adicionalmente, es la intención de la Sociedad prepagar el saldo de la deuda intercompañía mediante fondos obtenidos por deudas con terceros, fundamentalmente a través de colocaciones de bonos a ser efectuadas con cargo a las mencionadas líneas de bonos. Todo con bonos no convertibles.
 
-### Tareas Semana 4
+#### Caracterización de emisiones históricas (Aplicación cap. 20)
 
--   Utilizar otros ejemplos de visualización: https://business-science.github.io/tidyquant/articles/TQ04-charting-with-tidyquant.html
--   ¿Para que sirven las siguientes líneas en los bloques de código?
+En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la colocación 5 de 472.000.000 acciones por medio de una "Subasta de un Libro de Órdenes" en la Bolsa de Comercio de Santiago, Bolsa de Valores.
 
-```         
-#| warning: false
-#| echo: false
+**Activo sector energía (Karla Cedeño)**
+
+### Definición
+
+Empresas COPEC S.A. desempeña un papel esencial en la economía tanto de Chile como de la región debido a su prominente participación en el sector energético. Esta empresa está involucrada en varias facetas de la producción, distribución y comercialización de energía, lo que la convierte en un actor clave en la provisión de recursos energéticos esenciales. Su diversificación de activos es notable, ya que abarca una amplia gama de áreas energéticas, desde la explotación de petróleo y gas hasta la generación de electricidad y la inversión en energías renovables. Esta diversidad permite a Empresas COPEC S.A. tener un impacto significativo en el suministro energético tanto a nivel local como global. Es importante destacar que la empresa ha reconocido la creciente importancia de las energías renovables y ha incrementado sus inversiones en este campo. Este enfoque refleja la conciencia creciente de la necesidad de fuentes de energía más sostenibles y limpias en el panorama energético actual. No obstante, la empresa también enfrenta desafíos, como la volatilidad en los precios del petróleo y el gas, lo que puede afectar sus márgenes de beneficio. Además, su infraestructura energética, que incluye refinerías, plantas de generación eléctrica y estaciones de servicio, desempeña un papel crucial en la economía y el suministro energético del país. Empresas COPEC S.A. también está sujeta a regulaciones ambientales y debe adaptarse a las crecientes preocupaciones sobre la sostenibilidad y la reducción de emisiones de carbono, lo que resalta la importancia de la sostenibilidad en sus operaciones y decisiones estratégicas. Su presencia internacional en múltiples países le brinda una diversificación geográfica y una exposición a diferentes mercados y riesgos, lo que puede ser ventajoso en términos de expansión y mitigación de riesgos.
+
+```{r ETL} #| echo: false # Alternativamente Use FANG data set # data("FANG")  end <- as_date("2022-12-31") # Get AAPL and AMZN Stock Prices # AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end) # AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end) COPEC <- tq_get("COPEC.SN", get = "stock.prices", from = "2000-01-01", to = end) INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end) PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end) CL <- rbind(COPEC,INGEVEC,PARAUCO)}
 ```
 
--   Definir activos en base a cada una de las [industrias definidas](https://uandes.instructure.com/courses/28266/pages/proyecto-del-curso): Inmobiliaria, Banca, Energía
--   Buscar referencias científicas en la literatura para dar contexto al análisis
+El activo COPEC tiene un valor promedio para el intervalo igual a `r round(mean(COPEC$close),digits=0)`
+
+```{r COPECline} #| echo: false COPEC %>%     ggplot(aes(x = date, y = close)) +     geom_line() +     labs(title = "COPEC Line Chart", y = "Closing Price", x = "") +      theme_tq() +   geom_hline(yintercept=mean(CENCOSHOPP$close), linetype="dashed", color = "red")}
+```
+
+```{r CMPCcandle} #| warning: false COPEC %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "COPEC Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()}
+```
+
+### Motivación
+
+La inversión en el sector de energía a través de Empresas COPEC S.A. presenta una serie de
+
+atractivos beneficios. En primer lugar, esta inversión se considera una alternativa que posee una
+
+baja correlación con los instrumentos tradicionales de inversión, lo que puede ser valioso para la
+
+diversificación de una cartera. Además, los activos en el sector de energía, como el petróleo y el
+
+gas, tienden a proporcionar protección contra la inflación, lo que puede beneficiar a los inversores
+
+en tiempos de aumento de los precios. También es relevante mencionar que esta inversión puede
+
+ofrecer ventajas fiscales similares a las que se encuentran en el sector inmobiliario, lo que puede
+
+mejorar la rentabilidad.
+
+Adicionalmente, la inversión en activos tangibles respaldados por Empresas COPEC S.A., como
+
+refinerías y estaciones de servicio, puede ser atractiva para aquellos inversores que valoran la
+
+solidez de activos físicos. En momentos de crisis, el sector de energía suele mostrar resistencia y
+
+mantener retornos positivos, lo que lo convierte en un refugio seguro durante la incertidumbre
+
+económica. Además, la inversión en este sector ofrece flujos constantes de ingresos,
+
+diversificación, preservación de capital y una exposición internacional a través de la presencia de
+
+Empresas COPEC S.A. en múltiples países, lo que contribuye a su atractivo para los inversores
+
+interesados en un sector esencial que influye significativamente en la vida cotidiana de las
+
+personas.
+
+### Contexto
+
+En primer lugar, Empresas COPEC S.A. tiene una cartera de acciones que pueden estar vinculadas
+
+estrechamente a su sector principal, que es el sector de energía. Estas acciones pueden
+
+representar participaciones en empresas del sector petrolero, gasífero o de energía renovable. La
+
+inversión en acciones de compañías energéticas puede ser estratégica para Empresas COPEC S.A.,
+
+ya que le permite participar en el crecimiento y la rentabilidad de estas empresas, al tiempo que
+
+diversifica su cartera de activos.
+
+El rendimiento de estas acciones tiene un impacto directo en el rendimiento financiero y la salud
+
+de Empresas COPEC S.A. Por ejemplo, si las empresas en las que tienen acciones experimentan un
+
+crecimiento en sus operaciones y ganancias, es probable que esto se traduzca en mayores
+
+retornos para Empresas COPEC S.A. Sin embargo, también existe el riesgo de que las condiciones
+
+del mercado o factores específicos del sector puedan afectar negativamente el valor de estas
+
+acciones. Por lo tanto, es crucial que Empresas COPEC S.A. realice una gestión activa de su cartera
+
+de acciones y esté al tanto de los eventos y tendencias en el sector energético que puedan influir
+
+en sus inversiones.
+
+En segundo lugar, Los swaps son instrumentos financieros derivados utilizados por Empresas
+
+COPEC S.A. para gestionar riesgos financieros, en particular el riesgo de tipo de cambio y el riesgo
+
+de tasas de interés. En el contexto del sector de energía y los negocios internacionales, estos
+
+riesgos pueden ser especialmente significativos. Los swaps permiten a la empresa intercambiar
+
+flujos de efectivo basados en diferentes variables financieras, lo que les brinda flexibilidad para
+
+protegerse contra movimientos adversos en estas variables.
+
+Por ejemplo, si Empresas COPEC S.A. tiene operaciones en múltiples países y está expuesta a
+
+diferentes monedas, puede utilizar swaps de divisas para protegerse contra la volatilidad de los
+
+tipos de cambio. Del mismo modo, si tiene deudas o inversiones con tasas de interés variables, los
+
+swaps de tasas de interés pueden ayudar a administrar el riesgo de cambios en las tasas de
+
+interés.
+
+El uso de swaps es esencial para mantener la estabilidad financiera y garantizar que los resultados
+
+de Empresas COPEC S.A. no se vean gravemente afectados por fluctuaciones en los mercados de
+
+divisas o tasas de interés. Esto contribuye a su capacidad para planificar a largo plazo y gestionar
+
+de manera efectiva sus operaciones comerciales internacionales.
+
+Finalmente, en el caso de los "Otros Activos Financieros", es importante especificar el tipo de
+
+activos que componen esta categoría, ya que puede variar significativamente. Si estos activos son
+
+bonos, valores de renta fija u otros instrumentos financieros, su relación con las actividades
+
+comerciales de Empresas COPEC S.A. dependerá de su naturaleza y propósito.
+
+Por ejemplo, si estos activos son bonos emitidos por empresas del sector energético, su
+
+rendimiento podría estar vinculado a la salud financiera del sector en el que opera Empresas
+
+COPEC S.A. Si son instrumentos de renta fija, suelen proporcionar un flujo constante de ingresos y
+
+pueden ser una fuente de financiamiento para proyectos o inversiones en el sector de energía.
+
+```{r context} #| warning: false #| echo: false start <- end - weeks(6)  CL %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()}
+```
 
 ### Análisis de Largo Plazo
 
 #### Caracterización deuda (Aplicación cap. 15)
 
-Describir el activo especificando en que realiza sus inversiones (por tipo de instrumento). Especificar sus acciones comunes, preferentes y bonos relacionados aplicando lo aprendido en el capitulo respectivo.
+La emisión de bonos corporativos es una estrategia fundamental utilizada por Empresas COPEC
 
-Ejemplo de un fondo mutuo como activo a analizar:
+S.A. para obtener financiamiento en los mercados financieros. Estos bonos representan títulos de
 
-![](photos/Captura%20de%20pantalla%202023-08-22%20112340.png){fig-align="center"}
+deuda emitidos por la empresa con el propósito de captar fondos. Inversionistas que adquieren
+
+estos bonos efectúan un préstamo a Empresas COPEC S.A. y a cambio reciben pagos de interés
+
+periódicos, además de la devolución del capital invertido al vencimiento de los bonos. Estos
+
+instrumentos financieros poseen flexibilidad en términos de plazos de vencimiento y tasas de
+
+interés, permitiendo adaptar la estructura de deuda de la empresa según sus necesidades.
+
+Empresas COPEC S.A. debe honrar sus obligaciones de pago de intereses y devolución de capital de
+
+acuerdo con las condiciones establecidas en los bonos emitidos.
+
+La empresa también recurre a la deuda bancaria y financiamiento externo como parte de su
+
+estrategia de financiamiento. A través de acuerdos de préstamo con instituciones financieras,
+
+Empresas COPEC S.A. se compromete a reembolsar el capital prestado junto con los intereses
+
+correspondientes. Esta deuda puede presentar diversas estructuras, plazos y tasas de interés, a
+
+menudo respaldadas por activos de la empresa. La capacidad de Empresas COPEC S.A. para
+
+acceder a financiamiento externo depende en gran medida de su solidez crediticia y de la
+
+confianza que inspire a los prestamistas.
+
+En su expansión internacional y operaciones en múltiples países, Empresas COPEC S.A. a menudo
+
+asume deuda denominada en diversas monedas. Esta estrategia se relaciona con la necesidad de
+
+financiar sus operaciones internacionales y gestionar los riesgos asociados con las fluctuaciones en
+
+los tipos de cambio. La deuda en diferentes monedas expone a la empresa al riesgo de variaciones
+
+en las tasas de cambio, lo que puede afectar su rentabilidad y posición financiera. Para mitigar
+
+este riesgo, Empresas COPEC S.A. emplea instrumentos financieros derivados, como swaps de
+
+divisas, que le permiten gestionar su exposición a las variaciones en las monedas.
+
+La calificación crediticia desempeña un papel fundamental en la emisión y gestión de la deuda de
+
+Empresas COPEC S.A. Las agencias de calificación crediticia evalúan la solidez financiera de la
+
+empresa y otorgan una calificación que refleja su capacidad para cumplir con sus compromisos de
+
+deuda. Una calificación crediticia más alta suele permitir a la empresa acceder a financiamiento a
+
+tasas de interés más favorables, lo que puede reducir los costos de su deuda. Empresas COPEC S.A.
+
+trabaja activamente en mantener una calificación crediticia sólida para fortalecer su posición en
+
+los mercados financieros y garantizar su capacidad de financiar sus operaciones y proyectos de
+
+inversión.
 
 #### Caracterización de emisiones históricas (Aplicación cap. 20)
 
-Describir el proceso de emision de acciones paso a paso del activo seleccionado, caracterizando el tipo de colocacion que utilizaron en contraste con el procedimiento basico realizado en el capitulo respectivo.
+El proceso de emisión de deuda de Empresas COPEC S.A. es un proceso diversificado y complejo
 
-![](photos/Captura%20de%20pantalla%202023-08-22%20111527.png){fig-align="center"}
+que involucra la emisión de una variedad de instrumentos financieros en mercados globales. La
+
+empresa adapta su estructura de deuda a sus necesidades y condiciones del mercado, realiza una
+
+evaluación rigurosa de riesgos, accede a mercados internacionales y utiliza instrumentos derivados
+
+para gestionar riesgos, especialmente los relacionados con las fluctuaciones de las tasas de
+
+cambio. Este enfoque permite a Empresas COPEC S.A. obtener el financiamiento necesario para
+
+sus operaciones y proyectos de inversión, al tiempo que optimiza su posición en los mercados
+
+financieros. En contraste, el procedimiento básico de emisión de deuda implica una emisión más
+
+simple de bonos o préstamos en mercados locales o internacionales con términos específicos que
+
+deben cumplirse.
 
 #### Relación con activos derivados
 
-Describe un activo derivado relacionado, mostrando datos de su evolucion. Tambien mencionar porque es importante este derivado para la activo en cuestion.
+**Activo sector banca (Isidora Burgos)**
 
-Aplicar procedimiento de valoración de un derivado por inclusión en estructura de retornos (a profundizar en tutorial de la unidad de Derivados).
+### Definición
+
+El sector bancario en Chile al igual que en muchos países, cumple un rol fundamental al ser el intermediario entre los depositantes y prestatarios de dinero. Cumplen diferentes funciones, tales como, captar fondos, recibir depósitos, prestar dinero, realizar inversiones, entre otros. 
+
+El banco santander es una filial del grupo Santander, que está dentro de las instituciones más grandes a nivel mundial. El banco ofrece distintos productos y servicios, como cuentas de ahorros, corrientes, tarjetas de crédito y débito, seguros, servicios en línea, préstamos hipotecarios, etc. Está regulado por la CMF, la Superintendencia de Bancos e Instituciones Financieras de Chile, y por la U.S. Securities and Exchange Commission.
+
+```{r ETL} #| echo: false # Alternativamente Use FANG data set # data("FANG")  end <- as_date("2022-12-31") # Get AAPL and AMZN Stock Prices # AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end) # AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end) SANTANDER <- tq_get("BSAC.SN", get = "stock.prices", from = "2000-01-01", to = end) INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end) PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end) CL <- rbind(SANTANDER,INGEVEC,PARAUCO)}
+```
+
+El activo SANTANDER tiene un valor promedio para el intervalo igual a `r round(mean(SANTANDER$close),digits=0)`
+
+```{r SANTANDERline} #| echo: false SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_line() +     labs(title = "SANTANDER Line Chart", y = "Closing Price", x = "") +      theme_tq() +   geom_hline(yintercept=mean(SANTANDER$close), linetype="dashed", color = "red")}
+```
+
+```{r SANTANDERcandle} #| warning: false SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "SANTANDER Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()}
+```
+
+### Motivación
+
+En cuanto a la motivación, se eligió el sector de banca debido a la relevancia que tienen en la economía global, además de que los bancos juegan un papel fundamental en el desarrollo no solo económico, sino que también social. En Chile son entidades altamente reguladas por lo que la confianza de los clientes se mantiene durante el tiempo, además de que facilitan el acceso a créditos, inversiones, y otros servicios financieros. 
+
+Cabe destacar que el banco Santander es conocido a nivel mundial y tiene una gran trayectoria, lo cual lo ha posicionado como un banco con buena reputación y ha sido destacado por su incursión en la innovación de sus procesos constantemente. 
+
+Además en el artículo "Institutional development and foreign banks in Chile" se destaca que los bancos extranjeros, logran mejorar la competitividad del sector bancario, reducen la volatilidad de los rendimientos y aumentan los préstamos comerciales y de consumo.
+
+### Contexto
+
+Se discutirá sobre tres activos, siendo el primero "FONDO MUTUO SANTANDER ACCIONES CHILENAS ESG",  Es un fondo de inversión a largo plazo, invierte al menos un 90% de su cartera en instrumentos de capitalización de emisores nacionales, con alta participación en políticas de sustentabilidad, aspectos ambientales, sociales, un criterio mejor conocido como ESG  "Environmental, Social and Governance".  Sus retornos el último año se pueden ver en el siguiente gráfico del reporte de Santander Asset Management.
+
+Imagen 1.1: Indicadores de Retorno
+
+Fuente: https://www.santanderassetmanagement.cl/
+
+Imagen 1.2: Rentabilidad acumulada
+
+Fuente: https://www.santanderassetmanagement.cl/
+
+Respecto a los datos mostrados anteriormente se puede observar que el retorno el último mes fue negativo, sin embargo los meses anteriores fue positivo. Por lo que se puede inferir que en su totalidad la rentabilidad del fondo ha sido positiva. 
+
+Luego como segundo activo se analizará el "Fondo de Inversión Santander Deuda Chile", este fondo está orientado a una inversión a largo plazo y al igual que el fondo anterior está denominado en pesos, con tolerancia al riesgo moderada. Su cartera de inversión está compuesta en su mayoría por instrumentos de deuda de empresas y bancos, de corto, mediano y largo plazo. Tiene una remuneración anual de hasta un 0,60% (IVA incluido).  A continuación se muestra el comportamiento de su rendimiento, de enero 2018 hasta diciembre del año 2022. 
+
+Imagen 1.3: Rendimiento Deuda Chile
+
+Fuente: https://www.santanderassetmanagement.cl/
+
+Imagen 1.4: Rendimiento Histórico Deuda Chile
+
+Fuente: https://www.santanderassetmanagement.cl/
+
+Como los dos fondos mencionados anteriormente son denominados en pesos y mueven sus acciones dentro del país se analizará el comportamiento del Índice del consumidor en Chile. Su comportamiento se puede analizar en el último gráfico. 
+
+Imagen 1.5: Rendimiento Histórico Deuda Chile
+
+Fuente: https://www.santanderassetmanagement.cl/Imagen 1.6: Variación De los precios
+
+Fuente: Banco Central De Chile
+
+Imagen 1.6: Variación De los precios
+
+Fuente: Banco Central De Chile
+
+\
+Observando los gráficos se puede ver que el IPC en el periodo de agosto 2023 se mantuvo en un intervalo de -0.2 a 0.8, que es bastante similar a el "Fondo de Inversión Santander Deuda Chile" que si bien tienen variaciones negativas, en su totalidad se ven rendimientos positivos dentro del periodo 2022-2023, por lo que se podría decir que se comportan de una forma similar. En cuanto al "FONDO MUTUO SANTANDER ACCIONES CHILENAS ESG" se ve que hay más rentabilidad negativa, lo cual puede ser debido a que es un fondo de alto riesgo y tiene menos diversificación que el fondo anterior.
+
+```{r context} #| warning: false #| echo: false start <- end - weeks(6)  CL %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()}
+```
+
+### Análisis de Largo Plazo
+
+#### Caracterización deuda (Aplicación cap. 15)
+
+En cuanto a la cartera de inversiones del "Fondo mutuo Santander acciones chilenas ESG" está compuesta en casi su totalidad por acciones comunes de empresas establecidas en Chile, tales como, Cencosud, CCU, COPEC, Entel, etc. La que tiene más porcentaje en la cartera es La Sociedad Química y Minera de Chile, con una valorización del portafolio de 4.105.733 \$M. 
+
+La forma de conseguir liquidez se puede ver haciendo un desglose más profundo de las inversiones, la cual está un 100% compuesto por activos de capitalización de Chile, un 30.43% de la cartera es del sector Financiero, un 18.26% en materias primas, 15.41% en servicios básicos, un 5.26% en energía y el resto en otros. 
+
+Respecto al "Fondo de Inversión Santander Deuda Chile", tiene distintas inversiones y la de más porcentaje son Bonos de la tesorería General de la república, con un 22.61%, luego lo siguen Banco security con 13.12%, entre otros. Está cartera está más diversificada que el fondo anterior ya que cuenta con bonos y acciones comunes. En cuanto a la clasificación de riesgo del portafolio, un 67.47% es AA, un 7.13% A, un 0.91% AAA y el resto no se conoce la clasificación, por lo que se puede concluir que en su mayoría la cartera tiene  una calificación óptima de riesgo.
+
+#### Caracterización de emisiones históricas (Aplicación cap. 20)
+
+#### Relación con activos derivados
+
+En cuanto a los derivados, estos son instrumentos financieros donde su valor se deriva de otro activo. Estos activos pueden ser acciones, bonos, etc. Para los fondos escogidos de Santander, se puede ver que no utilizan este tipo de instrumento, pero si se pudiera comparar con alguno que se comporte de forma similar sería un contrato futuro sobre el IPC, el cual sería un indicador clave de la inflación, también serviría para mostrar los cambios y fluctuaciones en los precios, utilizándolo como una herramienta para cubrirse contra posibles cambios en la inflación.
 
 ### Reporte grupal
 
-El balance del portafolio del grupo estará compuesto en un 50% por el activo correspondiente al sector de energía, 30% sector inmobiliario, y 20% al sector banca. Esto lo consideramos óptimo porque Chile es un país que tiene gran potencial en el sector de la energía y podría beneficiarse fuertemente por nuevas fuentes de energía renovable. El peso asignado al sector inmobiliario es porque consideramos que tiene buenas expectativas de crecimiento en el largo plazo. Finalmente, la ponderación que recibe el sector banca es porque no creemos que en Chile haya mucho espacio para el desarrollo de ese sector, varios bancos tienen su matriz en otros países, y el banco con mayor número de cuentas es propiedad del estado. Además, ya tienen capturado aproximadamente a 15 de los 18 millones de chilenos, por lo que el espacio para crecer no es tan grande como para el sector inmobiliari y de energía.
+El balance del portafolio del grupo estará compuesto en un 50% por el activo correspondiente al sector de energía, 30% sector inmobiliario, y 20% al sector banca. Esto lo consideramos óptimo porque Chile es un país que tiene gran potencial en el sector de la energía y podría beneficiarse fuertemente por nuevas fuentes de energía renovable. El peso asignado al sector inmobiliario es porque consideramos que tiene buenas expectativas de crecimiento en el largo plazo. Finalmente, la ponderación que recibe el sector banca es porque no creemos que en Chile haya mucho espacio para el desarrollo de ese sector, varios bancos tienen su matriz en otros países, y el banco con mayor número de cuentas es propiedad del estado. Además, ya tienen capturado aproximadamente a 15 de los 18 millones de chilenos, por lo que el espacio para crecer no es tan grande como para el sector inmobiliario y de energía.
+
+Esta asignación se considera óptima debido a diversas razones. En primer lugar, Chile posee un inmenso potencial en el sector de la energía, particularmente en el desarrollo de fuentes de energía renovable. Este enfoque refleja la creencia en que el país puede beneficiarse significativamente de las oportunidades en este ámbito, contribuyendo tanto a su crecimiento económico como a la sostenibilidad ambiental.\
+\
+El peso asignado al sector inmobiliario se justifica por las expectativas de un crecimiento sostenible a largo plazo en este sector. La inversión en bienes raíces se considera atractiva debido a la demanda constante de viviendas y propiedades, así como a la posible generación de ingresos a través de alquileres. Esta perspectiva respalda la decisión de asignar un porcentaje sustancial del portafolio al sector inmobiliario, en anticipación a un rendimiento positivo en el futuro.\
+\
+Por último, la ponderación otorgada al sector bancario refleja una evaluación realista de sus perspectivas de crecimiento en el contexto chileno. Se reconoce que, aunque el sector bancario es sólido y estable en el país, existe una limitación en cuanto al espacio para un crecimiento significativo. Varios bancos tienen sus operaciones principales en el extranjero, y el mercado local ya está altamente penetrado, con la mayoría de la población bancarizada. En consecuencia, se considera que el potencial de expansión en el sector bancario es más limitado en comparación con las oportunidades que ofrecen los sectores de energía y bienes raíces. Esta estrategia de asignación de activos busca maximizar el potencial de crecimiento y rendimiento del portafolio del grupo en función de las perspectivas y condiciones específicas de cada sector.
