@@ -51,7 +51,7 @@ CENCOSHOPP %>%
   geom_hline(yintercept=mean(CENCOSHOPP$close), linetype="dashed", color = "red")
 ```
 
-```{r CMPCcandle}
+```{r CENCOSHOPPcandle}
 #| warning: false
 CENCOSHOPP %>%
     ggplot(aes(x = date, y = close)) +
