@@ -98,11 +98,11 @@ CL %>%
 
 Cencosud ha emitido bonos en dos oportunidades.
 
-Las fuentes de financiamiento de la Sociedad son fundamentalmente los flujos generados por la operación del negocio, créditos intercompañía obtenidos de su matriz Cencosud S.A., los que al 30 de junio 2019 ascendían a la suma de \$944.457.471.000, y a través de la colocación de los bonos emitidos con cargo a las Líneas de Bonos a 10 y 30 años plazo, inscritas en el Registro de Valores bajo los números 940 y 941, respectivamente. Se hace presente que respecto de la deuda intercompañía de la Sociedad al 30 de junio de 2019, recientemente ésta fue parcialmente pagada con los fondos obtenidos del aumento de capital materializado a través de la apertura en bolsa de la Compañía efectuada en el mes de julio de 2019. Adicionalmente, es la intención de la Sociedad prepagar el saldo de la deuda intercompañía mediante fondos obtenidos por deudas con terceros, fundamentalmente a través de colocaciones de bonos a ser efectuadas con cargo a las mencionadas líneas de bonos. Todo con bonos no convertibles.
+Las fuentes de financiamiento de la Sociedad son fundamentalmente los flujos generados por la operación del negocio, créditos intercompañía obtenidos de su matriz Cencosud S.A., los que al 30 de junio 2019 ascendían a la suma de \$944.457.471.000, y a través de la colocación de los bonos emitidos a 10 y 30 años. Se hace presente que respecto de la deuda intercompañía de la Sociedad al 30 de junio de 2019, recientemente ésta fue parcialmente pagada con los fondos obtenidos del aumento de capital materializado a través de la apertura en bolsa de la Compañía efectuada en el mes de julio de 2019. Adicionalmente, es la intención de la Sociedad prepagar el saldo de la deuda intercompañía mediante fondos obtenidos por deudas con terceros, fundamentalmente a través de colocaciones de bonos a ser efectuadas con cargo a las mencionadas líneas de bonos. Todo con bonos no convertibles.
 
 #### Caracterización de emisiones históricas (Aplicación cap. 20)
 
-En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la colocación 5 de 472.000.000 acciones por medio de una "Subasta de un Libro de Órdenes" en la Bolsa de Comercio de Santiago, Bolsa de Valores.
+En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la colocación de 472.000.000 acciones por medio de una "Subasta de un Libro de Órdenes" en la Bolsa de Comercio de Santiago.
 
 **Activo sector energía (Karla Cedeño)**
 
@@ -110,52 +110,40 @@ En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la 
 
 Empresas COPEC S.A. desempeña un papel esencial en la economía tanto de Chile como de la región debido a su prominente participación en el sector energético. Esta empresa está involucrada en varias facetas de la producción, distribución y comercialización de energía, lo que la convierte en un actor clave en la provisión de recursos energéticos esenciales. Su diversificación de activos es notable, ya que abarca una amplia gama de áreas energéticas, desde la explotación de petróleo y gas hasta la generación de electricidad y la inversión en energías renovables. Esta diversidad permite a Empresas COPEC S.A. tener un impacto significativo en el suministro energético tanto a nivel local como global. Es importante destacar que la empresa ha reconocido la creciente importancia de las energías renovables y ha incrementado sus inversiones en este campo. Este enfoque refleja la conciencia creciente de la necesidad de fuentes de energía más sostenibles y limpias en el panorama energético actual. No obstante, la empresa también enfrenta desafíos, como la volatilidad en los precios del petróleo y el gas, lo que puede afectar sus márgenes de beneficio. Además, su infraestructura energética, que incluye refinerías, plantas de generación eléctrica y estaciones de servicio, desempeña un papel crucial en la economía y el suministro energético del país. Empresas COPEC S.A. también está sujeta a regulaciones ambientales y debe adaptarse a las crecientes preocupaciones sobre la sostenibilidad y la reducción de emisiones de carbono, lo que resalta la importancia de la sostenibilidad en sus operaciones y decisiones estratégicas. Su presencia internacional en múltiples países le brinda una diversificación geográfica y una exposición a diferentes mercados y riesgos, lo que puede ser ventajoso en términos de expansión y mitigación de riesgos.
 
-```{r ETL} #| echo: false # Alternativamente Use FANG data set # data("FANG")  end <- as_date("2022-12-31") # Get AAPL and AMZN Stock Prices # AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end) # AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end) COPEC <- tq_get("COPEC.SN", get = "stock.prices", from = "2000-01-01", to = end) INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end) PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end) CL <- rbind(COPEC,INGEVEC,PARAUCO)}
+```{r ETL2}
+#| echo: false
+# Alternativamente Use FANG data set
+# data("FANG") 
+end <- as_date("2022-12-31")
+# Get AAPL and AMZN Stock Prices
+# AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end)
+# AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end)
+COPEC <- tq_get("COPEC.SN", get = "stock.prices", from = "2000-01-01", to = end)
+INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end)
+PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end)
+CL2 <- rbind(COPEC,INGEVEC,PARAUCO)
 ```
 
 El activo COPEC tiene un valor promedio para el intervalo igual a `r round(mean(COPEC$close),digits=0)`
 
-```{r COPECline} #| echo: false COPEC %>%     ggplot(aes(x = date, y = close)) +     geom_line() +     labs(title = "COPEC Line Chart", y = "Closing Price", x = "") +      theme_tq() +   geom_hline(yintercept=mean(CENCOSHOPP$close), linetype="dashed", color = "red")}
+```{r COPECline}
+#| echo: false
+COPEC %>%
+    ggplot(aes(x = date, y = close)) +
+    geom_line() +
+    labs(title = "COPEC Line Chart", y = "Closing Price", x = "") + 
+    theme_tq() +
+  geom_hline(yintercept=mean(COPEC$close), linetype="dashed", color = "red")
 ```
 
-```{r CMPCcandle} #| warning: false COPEC %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "COPEC Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()}
+```{r COPECcandle}
+#| warning: false 
+COPEC %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "COPEC Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()
 ```
 
 ### Motivación
 
-La inversión en el sector de energía a través de Empresas COPEC S.A. presenta una serie de
-
-atractivos beneficios. En primer lugar, esta inversión se considera una alternativa que posee una
-
-baja correlación con los instrumentos tradicionales de inversión, lo que puede ser valioso para la
-
-diversificación de una cartera. Además, los activos en el sector de energía, como el petróleo y el
-
-gas, tienden a proporcionar protección contra la inflación, lo que puede beneficiar a los inversores
-
-en tiempos de aumento de los precios. También es relevante mencionar que esta inversión puede
-
-ofrecer ventajas fiscales similares a las que se encuentran en el sector inmobiliario, lo que puede
-
-mejorar la rentabilidad.
-
-Adicionalmente, la inversión en activos tangibles respaldados por Empresas COPEC S.A., como
-
-refinerías y estaciones de servicio, puede ser atractiva para aquellos inversores que valoran la
-
-solidez de activos físicos. En momentos de crisis, el sector de energía suele mostrar resistencia y
-
-mantener retornos positivos, lo que lo convierte en un refugio seguro durante la incertidumbre
-
-económica. Además, la inversión en este sector ofrece flujos constantes de ingresos,
-
-diversificación, preservación de capital y una exposición internacional a través de la presencia de
-
-Empresas COPEC S.A. en múltiples países, lo que contribuye a su atractivo para los inversores
-
-interesados en un sector esencial que influye significativamente en la vida cotidiana de las
-
-personas.
+La inversión en el sector de energía a través de Empresas COPEC S.A. presenta una serie de atractivos beneficios. En primer lugar, esta inversión se considera una alternativa que posee una baja correlación con los instrumentos tradicionales de inversión, lo que puede ser valioso para la diversificación de una cartera. Además, los activos en el sector de energía, como el petróleo y el gas, tienden a proporcionar protección contra la inflación, lo que puede beneficiar a los inversores en tiempos de aumento de los precios. También es relevante mencionar que esta inversión puede ofrecer ventajas fiscales similares a las que se encuentran en el sector inmobiliario, lo que puede mejorar la rentabilidad. Adicionalmente, la inversión en activos tangibles respaldados por Empresas COPEC S.A., como refinerías y estaciones de servicio, puede ser atractiva para aquellos inversores que valoran la solidez de activos físicos. En momentos de crisis, el sector de energía suele mostrar resistencia y mantener retornos positivos, lo que lo convierte en un refugio seguro durante la incertidumbre económica. Además, la inversión en este sector ofrece flujos constantes de ingresos, diversificación, preservación de capital y una exposición internacional a través de la presencia de Empresas COPEC S.A. en múltiples países, lo que contribuye a su atractivo para los inversores interesados en un sector esencial que influye significativamente en la vida cotidiana de las personas.
 
 ### Contexto
 
@@ -233,7 +221,11 @@ COPEC S.A. Si son instrumentos de renta fija, suelen proporcionar un flujo const
 
 pueden ser una fuente de financiamiento para proyectos o inversiones en el sector de energía.
 
-```{r context} #| warning: false #| echo: false start <- end - weeks(6)  CL %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()}
+```{r context2}
+#| warning: false 
+#| #| echo: false 
+start <- end - weeks(6)  
+CL %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()
 ```
 
 ### Análisis de Largo Plazo
@@ -334,15 +326,24 @@ El sector bancario en Chile al igual que en muchos países, cumple un rol fundam
 
 El banco santander es una filial del grupo Santander, que está dentro de las instituciones más grandes a nivel mundial. El banco ofrece distintos productos y servicios, como cuentas de ahorros, corrientes, tarjetas de crédito y débito, seguros, servicios en línea, préstamos hipotecarios, etc. Está regulado por la CMF, la Superintendencia de Bancos e Instituciones Financieras de Chile, y por la U.S. Securities and Exchange Commission.
 
-```{r ETL} #| echo: false # Alternativamente Use FANG data set # data("FANG")  end <- as_date("2022-12-31") # Get AAPL and AMZN Stock Prices # AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end) # AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end) SANTANDER <- tq_get("BSAC.SN", get = "stock.prices", from = "2000-01-01", to = end) INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end) PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end) CL <- rbind(SANTANDER,INGEVEC,PARAUCO)}
+```{r ETL3}
+#| echo: false  
+SANTANDER <- tq_get("BSAC", get = "stock.prices", from = "2000-01-01", to = end) 
+INGEVEC <- tq_get("INGEVEC.SN", get = "stock.prices", from = "2000-01-01", to = end) 
+PARAUCO <- tq_get("PARAUCO.SN", get = "stock.prices", from = "2000-01-01", to = end) 
+CL3 <- rbind(SANTANDER,INGEVEC,PARAUCO)
 ```
 
 El activo SANTANDER tiene un valor promedio para el intervalo igual a `r round(mean(SANTANDER$close),digits=0)`
 
-```{r SANTANDERline} #| echo: false SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_line() +     labs(title = "SANTANDER Line Chart", y = "Closing Price", x = "") +      theme_tq() +   geom_hline(yintercept=mean(SANTANDER$close), linetype="dashed", color = "red")}
+```{r SANTANDERline}
+#| echo: false 
+SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_line() +     labs(title = "SANTANDER Line Chart", y = "Closing Price", x = "") +      theme_tq() +   geom_hline(yintercept=mean(SANTANDER$close), linetype="dashed", color = "red")
 ```
 
-```{r SANTANDERcandle} #| warning: false SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "SANTANDER Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()}
+```{r SANTANDERcandle}
+#| warning: false 
+SANTANDER %>%     ggplot(aes(x = date, y = close)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     labs(title = "SANTANDER Candlestick Chart", y = "Closing Price", x = "") +     theme_tq()
 ```
 
 ### Motivación
@@ -392,7 +393,11 @@ Fuente: Banco Central De Chile
 \
 Observando los gráficos se puede ver que el IPC en el periodo de agosto 2023 se mantuvo en un intervalo de -0.2 a 0.8, que es bastante similar a el "Fondo de Inversión Santander Deuda Chile" que si bien tienen variaciones negativas, en su totalidad se ven rendimientos positivos dentro del periodo 2022-2023, por lo que se podría decir que se comportan de una forma similar. En cuanto al "FONDO MUTUO SANTANDER ACCIONES CHILENAS ESG" se ve que hay más rentabilidad negativa, lo cual puede ser debido a que es un fondo de alto riesgo y tiene menos diversificación que el fondo anterior.
 
-```{r context} #| warning: false #| echo: false start <- end - weeks(6)  CL %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()}
+```{r context3}
+#| warning: false 
+#| echo: false 
+start <- end - weeks(6)  
+CL3 %>%     filter(date >= start - days(2 * 15)) %>%     ggplot(aes(x = date, y = close, group = symbol)) +     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +     geom_ma(ma_fun = SMA, n = 15, color = "darkblue", size = 1) +     labs(title = "CL Candlestick Chart",           subtitle = "Experimenting with Mulitple Stocks",          y = "Closing Price", x = "") +      coord_x_date(xlim = c(start, end)) +     facet_wrap(~ symbol, ncol = 2, scale = "free_y") +     theme_tq()
 ```
 
 ### Análisis de Largo Plazo
