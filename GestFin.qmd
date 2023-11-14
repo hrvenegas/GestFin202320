@@ -53,6 +53,7 @@ CENCOSHOPP %>%
 
 ```{r CENCOSHOPPcandle}
 #| warning: false
+#| echo: false
 CENCOSHOPP %>%
     ggplot(aes(x = date, y = close)) +
     geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
@@ -94,17 +95,134 @@ CL %>%
 
 ### Análisis de Largo Plazo
 
-#### Caracterización deuda (Aplicación cap. 15)
+#### Caracterización deuda 
 
-Cencosud ha emitido bonos en dos oportunidades.
+La estructura de financiamiento de la compañía contempla deuda inter-compañía como parte principal del financiamiento. La actual estructura de deuda financiera, sin considerar pasivos por arrendamiento, contempla amortizaciones en 2029 (U.F. 10 millones), 2044 (U.F. 3 millones) y 2045 (U.F. 6 millones).
 
-Las fuentes de financiamiento de la Sociedad son fundamentalmente los flujos generados por la operación del negocio, créditos intercompañía obtenidos de su matriz Cencosud S.A., los que al 30 de junio 2019 ascendían a la suma de \$944.457.471.000, y a través de la colocación de los bonos emitidos a 10 y 30 años. Se hace presente que respecto de la deuda intercompañía de la Sociedad al 30 de junio de 2019, recientemente ésta fue parcialmente pagada con los fondos obtenidos del aumento de capital materializado a través de la apertura en bolsa de la Compañía efectuada en el mes de julio de 2019. Adicionalmente, es la intención de la Sociedad prepagar el saldo de la deuda intercompañía mediante fondos obtenidos por deudas con terceros, fundamentalmente a través de colocaciones de bonos a ser efectuadas con cargo a las mencionadas líneas de bonos. Todo con bonos no convertibles.
+#### Caracterización de emisiones históricas 
 
-#### Caracterización de emisiones históricas (Aplicación cap. 20)
+En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la colocación de 472.000.000 acciones por medio de una "Subasta de un Libro de Órdenes" en la Bolsa de Comercio de Santiago. Recaudaron US\$ 1.055 millones, los cuales fueron utilizados para el pago de deuda con la matriz.
 
-En julio de 2019, la Sociedad materializó su apertura en bolsa a través de la colocación de 472.000.000 acciones por medio de una "Subasta de un Libro de Órdenes" en la Bolsa de Comercio de Santiago.
+Colocaron bonos corporativos en el mercado local por un total de U.F. 19 millones, cuyos fondos fueron utilizados para el pago de la deuda inter-compañía que mantenía la entidad con su matriz, Cencosud. Al respecto, la primera fase se realizó en mayo de 2019 mediante las series A (U.F. 7 millones) y B (U.F. 3 millones) y la segunda en septiembre a través de las series C (U.F. 3 millones) y E (UF 6 millones). A diciembre de 2022, los pasivos financieros de la entidad alcanzaron los \$ 735.761 millones registrando un aumento del 11,5% anual, coherente con el alza de la inflación considerando que los bonos se encuentran en U.F. A su vez, al considerar los pasivos financieros netos dicho incremento se situó en un 4,4% anual debido a un mayor nivel de caja y otros activos financieros mantenido durante el periodo. La actual estructura de deuda financiera, sin considerar pasivos por arrendamiento, contempla amortizaciones en 2029 (U.F. 10 millones), 2044 (U.F. 3 millones) y 2045 (U.F. 6 millones). Todo con bonos no convertibles y sin garantías.
 
-**Activo sector energía (Karla Cedeño)**
+#### **Relación con activos derivados**
+
+En cuanto a los derivados, estos son instrumentos financieros donde su valor se deriva de otro activo. Estos activos pueden ser acciones, bonos, etc.Cencoshopp no utiliza este tipo de instrumentos, pero si se pudiera comparar con alguno que se comporte de forma similar sería un contrato futuro sobre el IPC, el cual sería un indicador clave de la inflación, también serviría para mostrar los cambios y fluctuaciones en los precios, utilizándolo como una herramienta para cubrirse contra posibles cambios en la inflación, ya que el sector inmobiliario es muy sensible a la inflación, independiente de que la mayoría del tiempo funciones en unidades de fomento.
+
+### Opciones
+
+Para aplicar los modelos de valoración de opciones trabajaré con Simon Property Group como activo subyacente, porque hay mayor cantidad de información respecto a sus derivados. Utilizaré particularmente la opción call. Los datos los obtendré desde yahoo finance y una API del MIT llamada yahooquery, desde la cual se puede acceder con mayor facilidad a datos de los derivados de un activo. Simon Property Group, Inc. es una empresa estadounidense de bienes raíces comerciales, uno de los mayores fideicomisos de inversión en bienes raíces minoristas y el mayor operador de centros comerciales de los Estados Unidos. Similar a lo que sería Cencoshopp en Chile.
+
+Primero se utilizará el modelo de Black-Scholes.
+
+En el siguiente bloque se observan los precios de las acciones y del call más próximo a vencer, como tasa libre de riesgo se utilizará el bono del tesoro de EEUU a dos años, el cual hoy estuvo en 0.0502. La variable sigma se calculó como el promedio de las desviaciones de las opciones disponibles para el activo subyacente.
+
+```{r bs}
+#| echo: false 
+S = 115# Precio actual de la acción de SPG
+K = 60  # Precio de ejercicio de la opción
+T = 22/365  # La opción vence el 17 de noviembre, en 22 días, pero T está en años
+r = 0.0502  # Tasa libre de riesgo
+sigma = 0.34  # Volatilidad del activo subyacente, calculada como el promedio de las opciones disponibles
+
+black_scholes <- function(S, K, T, r, sigma, tipo) {
+  d1 <- (log(S / K) + (r + 0.5 * sigma^2) * T) / (sigma * sqrt(T))
+  d2 <- d1 - sigma * sqrt(T)
+
+  if (tipo == 'call') {
+    return(S * pnorm(d1) - K * exp(-r * T) * pnorm(d2))
+  } else if (tipo == 'put') {
+    return(K * exp(-r * T) * pnorm(-d2) - S * pnorm(-d1))
+  } else {
+    stop("Tipo de opción no válido. Use 'call' o 'put'.")
+  }
+}
+
+# Calcula el precio teórico de una opción de compra ('call')
+call_price <- black_scholes(S, K, T, r, sigma, tipo = 'call')
+cat("Precio teórico de la opción de compra:", call_price, "\n")
+
+# Calcula el precio teórico de una opción de venta ('put')
+put_price <- black_scholes(S, K, T, r, sigma, tipo = 'put')
+cat("Precio teórico de la opción de venta:", put_price, "\n")
+precio_put = black_scholes(S, K, T, r, sigma, 'put')
+```
+
+El modelo binomial se usa para valorizar opciones y se basa en que los precios de los activos subyacentes pueden evolucionar en pasos discretos durante un período de tiempo hasta el vencimiento de la opción. Se divide el período de tiempo hasta el vencimiento en N pasos iguales de duración, se asume que el precio del activo subyacente puede moverse hacia arriba o hacia abajo. Se modela con u \> 1 y d \< 1. Luego se definen las probabilidades de que el precio del activo subyacente suba o baje, se usa la probabilidad de un rendimiento igual al rendimiento libre de riesgo, probabilidad p. A partir del precio actual del activo subyacente S y los factores de aumento y disminución (u y d), se calculan los precios futuros del activo subyacente en cada uno de los momentos en el tiempo. Para cada precio futuro se calcula el precio de la opción de compra y de venta. El precio de futuro se calcula $$S_n = S_0 \cdot u^{n} \cdot d^{N-n}$$ El valor de la opción de compra se calcula como $$C_n = max(S_n - X, 0)$$ y la de venta como $$P_n = max(X - S_n, 0)$$ Luego de todo eso se debe calcular el valor presente de las opciones en n = 0 y los precios de compra y venta quedan como: $$V_0 = e^{-r T} \cdot (p \cdot C_1 \cdot + (1 - p) \cdot C_0)$$ $$y$$ $$V_0 = e^{-r T} \cdot (p \cdot P_1 \cdot + (1 - p) \cdot P_0)$$ respectivamente.
+
+Trabajaré con los mismos datos de la sección anterior (S, K, r, sigma, T)
+
+```{r bin}
+#| echo: false  
+N = 100
+S = 115# Precio actual de la acción de SPG 
+K = 60  # Precio de ejercicio de la opción 
+T = 22/365  # La opción vence el 17 de noviembre, en 22 días, pero T está en años 
+r = 0.0502  # Tasa libre de riesgo 
+sigma = 0.34  # Volatilidad del activo subyacente, calculada como el promedio de las opciones disponibles  
+modelo_binomial_call <- function(S, K, r, T, N) {
+  dt <- T/N
+  u <- exp(r * dt)
+  d <- 1/u
+  p <- (exp(r * dt) - d) / (u - d)
+
+  ST <- numeric(N + 1)
+  for (i in 0:N) {
+    ST[i + 1] <- S * (u^(N - i)) * (d^i)
+  }
+
+  payoff <- pmax(ST - K, 0)
+
+  for (i in (N - 1):0) {
+    for (j in 0:i) {
+      payoff[j + 1] <- exp(-r * dt) * (p * payoff[j + 2] + (1 - p) * payoff[j + 1])
+    }
+  }
+
+  return(payoff[1])
+}
+
+modelo_binomial_put <- function(S, K, r, T, N) {
+  dt <- T/N
+  u <- exp(r * dt)
+  d <- 1/u
+  p <- (exp(r * dt) - d) / (u - d)
+
+  ST <- numeric(N + 1)
+  for (i in 0:N) {
+    ST[i + 1] <- S * (u^(N - i)) * (d^i)
+  }
+
+  payoff <- pmax(K - ST, 0)
+
+  for (i in (N - 1):0) {
+    for (j in 0:i) {
+      payoff[j + 1] <- exp(-r * dt) * (p * payoff[j + 2] + (1 - p) * payoff[j + 1])
+    }
+  }
+
+  return(payoff[1])
+}
+
+
+call_price <- modelo_binomial_call(S, K, r, T, N)
+cat("Precio call:", call_price, "\n")
+
+
+put_price <- modelo_binomial_put(S, K, r, T, N)
+cat("Precio put:", put_price, "\n")
+
+```
+
+Ambos modelos entregan valores similares, 55.18 y 54.48 para compra y 0 para venta. Tiene sentida por que el precio de ejercicio está muy por debajo del precio actual y queda relativamente poco tiempo para el vencimiento de esa opción y la variabilidad no es alta, por lo que tener derecho a comprar a ese precio tiene sentido, obligarse a vender a ese precio no. \### Los dos modelos dicen que hay un beneficio potencial al comprar la opción y ejercerla en el futuro si el precio del activo subyacente (SPG) sube. La diferencia de precios puede estar relacionada con los supuestos y métodos de los modelos. \### Black and Scholes y el modelo Binomial dan valores a la opción de venta muy cercanos a cero o cero. Esto significa que actualmente no hay beneficio en comprar una opción de venta sobre SPG. Esto puede ser que se espera que el precio de SPG no disminuya de manera significativa en el plazo que le queda a la opción.
+
+### Referencias
+
+<https://www.feller-rate.com/clasificacion-cp/10989/15967/cencosud-shopping-sa>
+
+<https://es-us.finanzas.yahoo.com/quote/CENCOSHOPP.SN/profile?p=CENCOSHOPP.SN>
+
+## **Activo sector energía (Karla Cedeño)**
 
 ### Definición
 
