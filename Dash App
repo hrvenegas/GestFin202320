@@ -1,0 +1,162 @@
+import dash
+import dash_core_components as dcc
+from dash import html
+from dash.dependencies import Input, Output
+import math
+import yahooquery
+from scipy.stats import norm
+from yahooquery import Ticker
+import pandas as pd
+import yfinance as yf
+import numpy as np
+import plotly.graph_objects as go
+
+# Lista de símbolos de acciones y sus títulos correspondientes
+acciones = [('SPG', 'Simon Properties Group'), ('BSAC', 'Banco Santander Chile'), ('XOM', 'EXXON Mobil Corporation')]
+
+# Inicializa la aplicación
+app = dash.Dash(__name__)
+
+# Define el diseño de la aplicación
+app.layout = html.Div(children=[
+    html.H1("Proyecto Gestión Financiera"),
+    html.H3("Profesor: Sebastián Cea"),
+
+    # Agrega botones para cambiar de acción
+    html.Button("Anterior", id='boton-anterior', n_clicks=0),
+    html.Button("Siguiente", id='boton-siguiente', n_clicks=0),
+
+    html.Div(children=[
+        dcc.Graph(id='grafico-precios-accion'),
+        dcc.Graph(id='grafico-velas'),
+
+        # Agrega un contenedor para información adicional
+        html.Div(id='informacion-adicional')
+    ])
+])
+
+# Define la lógica de actualización del gráfico de precios y la información adicional
+@app.callback(
+    [Output('grafico-precios-accion', 'figure'),
+     Output('grafico-velas', 'figure'),
+     Output('informacion-adicional', 'children')],
+    [Input('boton-anterior', 'n_clicks'),
+     Input('boton-siguiente', 'n_clicks')]
+)
+def actualizar_grafico_precios(n_clicks_anterior, n_clicks_siguiente):
+    # Calcula el índice de la acción según el número de clics
+    n_clicks_totales = n_clicks_siguiente - n_clicks_anterior
+    indice_diapositiva = n_clicks_totales % len(acciones)
+    simbolo_accion, titulo_accion = acciones[indice_diapositiva]
+
+    # Descarga datos desde Yahoo Finance
+    data = yf.download(simbolo_accion, start='2022-11-12', end='2023-11-12')
+
+    # Calcula el precio promedio de la opción
+    precio_promedio_accion = data['Close'].mean()
+    t = Ticker(simbolo_accion, asynchronous=True)
+    df = pd.DataFrame(t.option_chain)
+    ticker = yf.Ticker(simbolo_accion)
+    
+    # datos disponibles de yahoo finance
+    datos = ticker.options
+    codigo_opcion = datos[0]
+    opcion_datos = ticker.option_chain(codigo_opcion)
+    precio = float(opcion_datos[2]['regularMarketPrice']) #precio de ejercicio de la opción
+    
+    t = Ticker(simbolo_accion, asynchronous=True)
+    df = pd.DataFrame(t.option_chain)
+    precio_strike = df['strike'][0] #último precio strike para el call más próximo a vencer
+    
+    S = float(opcion_datos[2]['regularMarketPrice'])  # Precio actual de la acción de SPG
+    K = df['strike'][0]  # Precio de ejercicio de la opción
+    T = 22/365  # La opción vence el 17 de noviembre, en 22 días, pero T está en años
+    r = 0.0502  # Tasa libre de riesgo
+    sigma = 0.34  # Volatilidad del activo subyacente, calculada como el promedio de las opciones disponibles
+    
+    def black_scholes(S, K, T, r, sigma, tipo):
+        d1 = (math.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * math.sqrt(T))
+        d2 = d1 - sigma * math.sqrt(T)
+    
+        if tipo == 'call':
+            return S * norm.cdf(d1) - K * math.exp(-r * T) * norm.cdf(d2)
+        elif tipo == 'put':
+            return K * math.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
+        
+    precio_call = black_scholes(S, K, T, r, sigma, 'call') 
+    precio_put = black_scholes(S, K, T, r, sigma, 'put')
+    N = 100
+    def modelo_binomial_call(S, K, r, T, N):
+        dt = T/N
+        u = np.exp(r*dt)
+        d = 1/u
+        p = (np.exp(r*dt) - d) / (u - d)
+    
+        ST = np.zeros(N+1)
+        for i in range(N+1):
+            ST[i] = S * (u**(N-i)) * (d**i)
+    
+        payoff = np.maximum(ST - K, 0)
+    
+        for i in range(N-1, -1, -1):
+            for j in range(i+1):
+                payoff[j] = np.exp(-r*dt) * (p * payoff[j+1] + (1-p) * payoff[j])
+    
+        return payoff[0]
+
+    def modelo_binomial_put(S, K, r, T, N):
+        dt = T/N
+        u = np.exp(r*dt)
+        d = 1/u
+        p = (np.exp(r*dt) - d) / (u - d)
+    
+        ST = np.zeros(N+1)
+        for i in range(N+1):
+            ST[i] = S * (u**(N-i)) * (d**i)
+    
+        payoff = np.maximum(K - ST, 0)
+    
+        for i in range(N-1, -1, -1):
+            for j in range(i+1):
+                payoff[j] = np.exp(-r*dt) * (p * payoff[j+1] + (1-p) * payoff[j])
+    
+        return payoff[0]
+    precio_call_bin = modelo_binomial_call(S, K, r, T, N)
+    precio_put_bin = modelo_binomial_put(S, K, r, T, N)
+    # Crea un gráfico de líneas con los precios de cierre
+    figura2 = go.Figure(data=[go.Candlestick(x=data.index,
+                                            open=data['Open'],
+                                            high=data['High'],
+                                            low=data['Low'],
+                                            close=data['Close'])])
+    figura = {
+        'data': [
+            {'x': data.index, 'y': data['Close'], 'type': 'line', 'name': simbolo_accion},
+        ],
+        'layout': {
+            'title': f'Precio de {titulo_accion}',
+            'xaxis': {'title': 'Fecha'},
+            'yaxis': {'title': 'Precio de cierre'},
+        }
+    
+    }
+
+    # Crea el contenido de la información adicional
+    informacion_adicional = html.Div([
+        html.H1(f'El precio promedio de la acción en el último año fue: {precio_promedio_accion:.2f}'),
+        html.H3(f'Precio de ejercicio: {precio}'),
+        html.H3(f'Precio actual: {S}'),
+        html.H3(f'Precio de strike de la opción: {precio_strike}'),
+        html.H1(f'Valorización según modelo de Black-Scholes'),
+        html.H3(f'Precio call: {precio_call:.2f}'),
+        html.H3(f'Precio put: {precio_put:.2f}'),
+        html.H1(f'Valorización según modelo Binomial'),
+        html.H3(f'Precio call: {precio_call_bin:.2f}'),
+        html.H3(f'Precio put: {precio_put_bin:.2f}'),
+    ])
+
+    return figura, figura2, informacion_adicional
+
+# Ejecuta la aplicación
+if __name__ == '__main__':
+    app.run_server(debug=True)
